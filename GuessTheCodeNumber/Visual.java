@@ -40,9 +40,12 @@ public class Visual {
 
         // --- Добавляем поля для ввода 4 цифр ---
 
-        JLabel instructionLabel = new JLabel("Enter 4 digits:");
-        instructionLabel.setBounds(60, 100, 150, 30);
-        gameFrame.add(instructionLabel);
+
+        // Однострочное поле
+        JTextField textField = new JTextField(20); // 20 символов шириной
+        textField.setText("Введите имя...");
+        textField.setVisible(true);
+
 
         // Массив для хранения полей, чтобы к ним было удобно обращаться
         JTextField[] codeFields = new JTextField[4];
