@@ -1,76 +1,91 @@
 package GuessTheCodeNumber;
 
+import GuessTheCodeNumber.Logic.GameLogic;
+
 import javax.swing.*;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
 import java.awt.*;
 
 /**
  * Created by Eugene
- * create on 05/01/2026
+ * create on 08/01/2026
  * Program description:
  */
+
 public class Visual {
+    // Interface components
+    private static JFrame gameFrame;
+    private static JTextField textField;
+    private static JButton submitButton;
+    private static JLabel triesLabel;
+    private static JLabel rightNumbersLabel;
+    private static JLabel rightPlaceLabel;
 
-    public static void main(String[] args) {
-        JFrame gameFrame = new JFrame("Guess the code number");
+    /**
+     * Creates and shows GUI
+     */
+    public static void createAndShowGUI() {
+        initializeFrame();
+        createLabels();
+        createInputField();
+        createButton();
+        setupGameLogic();
+        showFrame();
+    }
 
-        //close program x
+    private static void initializeFrame() {
+        gameFrame = new JFrame("Guess the code number");
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        //set the size of the window
-        gameFrame.setSize(300, 250);
-
-        //layout
+        gameFrame.setSize(285, 250);
         gameFrame.setLayout(null);
+        gameFrame.setResizable(false);
+    }
 
-        //score text
-        JLabel scoreLabel1 = new JLabel("Right numbers: 0");
-        scoreLabel1.setBounds(85, 25, 150, 30);
-        gameFrame.add(scoreLabel1);
+    private static void createLabels() {
+        rightNumbersLabel = new JLabel("Right numbers: 0");
+        rightNumbersLabel.setBounds(85, 25, 150, 30);
+        gameFrame.add(rightNumbersLabel);
 
-        //score text
-        JLabel scoreLabel2 = new JLabel("Numbers in right place: 0");
-        scoreLabel2.setBounds(40, 40, 150, 30);
-        gameFrame.add(scoreLabel2);
+        rightPlaceLabel = new JLabel("Numbers in right place: 0");
+        rightPlaceLabel.setBounds(40, 40, 150, 30);
+        gameFrame.add(rightPlaceLabel);
 
-        //score text
-        JLabel scoreLabel3 = new JLabel("Enter 4 different digits");
-        scoreLabel3.setBounds(80, 60, 150, 30);
-        gameFrame.add(scoreLabel3);
+        JLabel instructionLabel = new JLabel("Enter 4 different digits");
+        instructionLabel.setBounds(80, 60, 150, 30);
+        gameFrame.add(instructionLabel);
 
-        // Однострочное поле
-        JTextField textField = new JTextField(4); // 4 digits
+        triesLabel = new JLabel("You tried: 0");
+        triesLabel.setBounds(100, 165, 150, 30);
+        gameFrame.add(triesLabel);
+    }
+
+    private static void createInputField() {
+        textField = new JTextField(4);
         textField.setBounds(110, 100, 50, 30);
         gameFrame.add(textField);
-        // Примените фильтр к полю ввода
-        ((AbstractDocument) textField.getDocument()).setDocumentFilter(new DigitFilter());
+       // ((AbstractDocument) textField.getDocument()).setDocumentFilter(new DigitFilter());
+    }
 
-
-        // Кнопка подтверждения
-        JButton submitButton = new JButton("TRY");
+    private static void createButton() {
+        submitButton = new JButton("TRY");
         submitButton.setBounds(60, 140, 150, 30);
         gameFrame.add(submitButton);
+    }
 
-        gameFrame.setLocationRelativeTo(null); // Центрировать окно на экране
-        gameFrame.setVisible(true);
+    private static void setupGameLogic() {
+        // Game logic is initialized here
+        new GameLogic();
+    }
 
-        gameFrame.setResizable(false); // Фиксированный размер окна
-
-        // Важно: setVisible в конце
+    private static void showFrame() {
+        gameFrame.setLocationRelativeTo(null);
         gameFrame.setVisible(true);
     }
-}
 
-// Класс-фильтр для ограничения ввода
-class DigitFilter extends DocumentFilter {
-    @Override
-    public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-        // Проверяем: текст — цифра И в поле еще нет символов (или мы заменяем существующий)
-        if (text.matches("\\d") && (fb.getDocument().getLength() - length + text.length() <= 4)) {
-            super.replace(fb, offset, length, text, attrs);
+    // Methods for getting user input
+    public static String getUserInput() {
+        if (textField != null) {
+            return textField.getText();
         }
+        return "";
     }
 }
