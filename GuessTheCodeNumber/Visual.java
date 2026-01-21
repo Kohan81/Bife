@@ -1,9 +1,12 @@
 package GuessTheCodeNumber;
 
+import GuessTheCodeNumber.Logic.DigitFilter;
 import GuessTheCodeNumber.Logic.GameLogic;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by Eugene
@@ -15,29 +18,68 @@ public class Visual {
     // Interface components
     private static JFrame gameFrame;
     private static JTextField textField;
+    private static JTextPane textPane;
     private static JButton submitButton;
     private static JLabel triesLabel;
     private static JLabel rightNumbersLabel;
     private static JLabel rightPlaceLabel;
 
-    /**
-     * Creates and shows GUI
-     */
-    public static void createAndShowGUI() {
-        initializeFrame();
-        createLabels();
-        createInputField();
-        createButton();
-        setupGameLogic();
-        showFrame();
-    }
-
     private static void initializeFrame() {
         gameFrame = new JFrame("Guess the code number");
         gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        gameFrame.setSize(285, 250);
+        gameFrame.setSize(285, 650);
         gameFrame.setLayout(null);
         gameFrame.setResizable(false);
+    }
+
+    private static void createInputField() {
+        textField = new JTextField(4);
+        textField.setBounds(110, 100, 50, 30);
+        gameFrame.add(textField);
+        // ((AbstractDocument) textField.getDocument()).setDocumentFilter(new DigitFilter());
+    }
+
+    private static void createButton() {
+        submitButton = new JButton("TRY");
+        submitButton.setBounds(60, 140, 150, 30);
+        gameFrame.add(submitButton);
+
+        // Логика нажатия кнопки (максимально просто)
+        DigitFilter filter = new DigitFilter();
+
+        submitButton.addActionListener(e -> {
+            String input = getUserInput();
+
+            if (!filter.isFourDigits(input)) {
+                JOptionPane.showMessageDialog(
+                        gameFrame,
+                        "Please enter exactly 4 digits (0-9).",
+                        "Invalid input",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+
+            if (!filter.hasNoRepeatedDigits(input)) {
+                JOptionPane.showMessageDialog(
+                        gameFrame,
+                        "Digits must not repeat.",
+                        "Invalid input",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
+
+            appendToTextPane(input);
+        });
+
+    }
+
+    private static void createTextPane() {
+        textPane = new JTextPane();
+        textPane.setBounds(10, 200, 250, 400);
+        textPane.setText("\tYour input: \n");
+        gameFrame.add(textPane);
     }
 
     private static void createLabels() {
@@ -58,19 +100,6 @@ public class Visual {
         gameFrame.add(triesLabel);
     }
 
-    private static void createInputField() {
-        textField = new JTextField(4);
-        textField.setBounds(110, 100, 50, 30);
-        gameFrame.add(textField);
-       // ((AbstractDocument) textField.getDocument()).setDocumentFilter(new DigitFilter());
-    }
-
-    private static void createButton() {
-        submitButton = new JButton("TRY");
-        submitButton.setBounds(60, 140, 150, 30);
-        gameFrame.add(submitButton);
-    }
-
     private static void setupGameLogic() {
         // Game logic is initialized here
         new GameLogic();
@@ -87,5 +116,26 @@ public class Visual {
             return textField.getText();
         }
         return "";
+    }
+
+    /**
+     * Creates and shows GUI
+     */
+    public static void createAndShowGUI() {
+        initializeFrame();
+        createLabels();
+        createInputField();
+        createButton();
+        createTextPane();
+        setupGameLogic();
+        showFrame();
+    }
+
+    //print user input code on the screen
+    public static void appendToTextPane(String message) {
+        if (textPane == null) return;
+
+        String oldText = textPane.getText();
+        textPane.setText(oldText + message + "\n");
     }
 }

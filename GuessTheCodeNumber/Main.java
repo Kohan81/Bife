@@ -5,27 +5,31 @@ package GuessTheCodeNumber;
  * create on 08/01/2026
  * Program description:
  */
+
+import GuessTheCodeNumber.Logic.DigitFilter;
+
 /**
  * Главный класс для запуска игры "Guess the Code Number"
  */
 public class Main {
     public static void main(String[] args) {
-        // Запуск игры в потоке EDT (Event Dispatch Thread)
+        // Game started in the EDT (Event Dispatch Thread)
         javax.swing.SwingUtilities.invokeLater(() -> {
             try {
-                // Инициализация и запуск визуальной части
+                // Initialization and showing GUI
                 Visual.createAndShowGUI();
-                System.out.println("Игра запущена успешно!");
+                System.out.println("Game started.");
             } catch (Exception e) {
-                System.err.println("Ошибка при запуске игры:");
+                System.err.println("EXCEPTION: game failed to start.");
                 e.printStackTrace();
                 javax.swing.JOptionPane.showMessageDialog(
                         null,
-                        "Ошибка при запуске игры: " + e.getMessage(),
-                        "Ошибка",
+                        "EXEPTION: " + e.getMessage(),
+                        "EXECUTION ERROR",
                         javax.swing.JOptionPane.ERROR_MESSAGE
                 );
             }
+            DigitFilter df = new DigitFilter();
         });
     }
 }

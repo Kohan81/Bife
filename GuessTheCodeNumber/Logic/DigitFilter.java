@@ -8,38 +8,38 @@ import GuessTheCodeNumber.Visual;
  * Program description:
  */
 // Class for filtering input
+
 public class DigitFilter {
 
-    // get user input
-    Visual visual = new Visual();
-    String userInput = visual.getUserInput();
-
-    //get user input and check if it is a digit
-    public boolean isDigit(String str) {
-        return str.matches("[0-9]+");
+    // checking that user input just 4 digits
+    public boolean isFourDigits(String input) {
+        if (input == null) return false;
+        input = input.trim();
+        return input.matches("\\d{4}");
     }
 
-    //make array from user input
-    char[] userInputArray = userInput.toCharArray();
+    // checking that user input just 4 digits
+    // and converting it to the int array
+    public int[] toIntArray(String input) {
+        if (!isFourDigits(input)) return null;
 
-    //check is the array equal 4 digits
-    private void checkArrayLength(char[] user, String input) {
-        if (user.length == 4) {
-            showUserInput();
-            makeIntArray(userInputArray);
+        int[] code = new int[4];
+        for (int i = 0; i < 4; i++) {
+            code[i] = input.charAt(i);
         }
+        return code;
     }
 
-    //print user input code on the screen
-    private void showUserInput(){
-        //Visual
-    }
+    public boolean hasNoRepeatedDigits(String input) {
 
-    //making int array from char array
-    private void makeIntArray(char[] userInputArray) {
-        for (int i = 0; i < userInputArray.length; i++) {
-            GuessTheCodeNumber.Logic.GameLogic gameLogic = new GuessTheCodeNumber.Logic.GameLogic();
-            gameLogic.userInput[i] = Character.getNumericValue(userInputArray[i]);
+        for (int i = 0; i < input.length(); i++) {
+            for (int j = i + 1; j < input.length(); j++) {
+                if (input.charAt(i) == input.charAt(j)) {
+                    return false; // repeated digit
+                }
+            }
         }
+        return true; // no repeated digits
     }
+
 }
