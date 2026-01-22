@@ -5,8 +5,9 @@ import GuessTheCodeNumber.Logic.GameLogic;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.JOptionPane;
 
 /**
  * Created by Eugene
@@ -16,6 +17,10 @@ import java.awt.event.ActionListener;
 
 public class Visual {
     // Interface components
+
+    private static final Set<String> usedInputs = new HashSet<>();
+    private static int validAttemptsCount = 0;
+
     private static JFrame gameFrame;
     private static JTextField textField;
     private static JTextPane textPane;
@@ -36,7 +41,6 @@ public class Visual {
         textField = new JTextField(4);
         textField.setBounds(110, 100, 50, 30);
         gameFrame.add(textField);
-        // ((AbstractDocument) textField.getDocument()).setDocumentFilter(new DigitFilter());
     }
 
     private static void createButton() {
@@ -44,12 +48,15 @@ public class Visual {
         submitButton.setBounds(60, 140, 150, 30);
         gameFrame.add(submitButton);
 
-        // Логика нажатия кнопки (максимально просто)
+        // Button Press Logic
         DigitFilter filter = new DigitFilter();
 
         submitButton.addActionListener(e -> {
             String input = getUserInput();
+            if (input == null) input = "";
+            input = input.trim();
 
+            // 1) Check: exactly 4 digits
             if (!filter.isFourDigits(input)) {
                 JOptionPane.showMessageDialog(
                         gameFrame,
@@ -60,6 +67,7 @@ public class Visual {
                 return;
             }
 
+            // 2) Check: the numbers are not repeated within the number
             if (!filter.hasNoRepeatedDigits(input)) {
                 JOptionPane.showMessageDialog(
                         gameFrame,
@@ -70,8 +78,25 @@ public class Visual {
                 return;
             }
 
+            // 3) Check: this number has already been entered before
+            if (usedInputs.contains(input)) {
+                JOptionPane.showMessageDialog(
+                        gameFrame,
+                        "You already entered this number.",
+                        "Duplicate input",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+                return;
+            }
+
+            // 4) Everything is OK: we remember the number, display it, and increase the counter.
+            usedInputs.add(input);
             appendToTextPane(input);
-        });
+
+            validAttemptsCount++;
+            updateCounter();
+
+    });
 
     }
 
@@ -138,4 +163,9 @@ public class Visual {
         String oldText = textPane.getText();
         textPane.setText(oldText + message + "\n");
     }
+
+    private static void updateCounter() {
+        triesLabel.setText("Attempts: " + validAttemptsCount);
+    }
+
 }
