@@ -96,6 +96,7 @@ public class Visual {
             validAttemptsCount++;
             updateCounter();
 
+            resetInputField();
     });
 
     }
@@ -161,11 +162,19 @@ public class Visual {
         if (textPane == null) return;
 
         String oldText = textPane.getText();
-        textPane.setText(oldText + message + "\n");
+        textPane.setText(oldText + "  " + message + "\n");
     }
 
     private static void updateCounter() {
         triesLabel.setText("Attempts: " + validAttemptsCount);
     }
+
+    private static void resetInputField() {
+        if (textField == null) return;
+
+        textField.setText("");
+        textField.requestFocusInWindow();
+    }
+
 
 }
