@@ -6,8 +6,6 @@ package GuessTheCodeNumber;
  * Program description:
  */
 
-import GuessTheCodeNumber.Logic.DigitFilter;
-
 /**
  * Главный класс для запуска игры "Guess the Code Number"
  */

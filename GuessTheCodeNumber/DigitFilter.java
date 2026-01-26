@@ -1,6 +1,4 @@
-package GuessTheCodeNumber.Logic;
-
-import GuessTheCodeNumber.Visual;
+package GuessTheCodeNumber;
 
 /**
  * Created by Eugene
@@ -25,11 +23,12 @@ public class DigitFilter {
 
         int[] code = new int[4];
         for (int i = 0; i < 4; i++) {
-            code[i] = input.charAt(i);
+            code[i] = Character.getNumericValue(input.charAt(i));
         }
         return code;
     }
 
+    // checking that user input has no repeated digits
     public boolean hasNoRepeatedDigits(String input) {
 
         for (int i = 0; i < input.length(); i++) {

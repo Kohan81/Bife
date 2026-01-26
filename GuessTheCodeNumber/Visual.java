@@ -1,8 +1,5 @@
 package GuessTheCodeNumber;
 
-import GuessTheCodeNumber.Logic.DigitFilter;
-import GuessTheCodeNumber.Logic.GameLogic;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashSet;
@@ -28,6 +25,9 @@ public class Visual {
     private static JLabel triesLabel;
     private static JLabel rightNumbersLabel;
     private static JLabel rightPlaceLabel;
+
+    private static GameLogic gameLogic;
+
 
     private static void initializeFrame() {
         gameFrame = new JFrame("Guess the code number");
@@ -89,15 +89,31 @@ public class Visual {
                 return;
             }
 
-            // 4) Everything is OK: we remember the number, display it, and increase the counter.
+            // 4) Everything is OK
             usedInputs.add(input);
             appendToTextPane(input);
 
             validAttemptsCount++;
             updateCounter();
 
+            if (gameLogic != null) {
+                gameLogic.getUserInput(input); // передаем строку ввода
+                updateRightNumbersLabel();
+                updateRightPlaceLabel();
+
+                // Проверка победы
+                if (gameLogic.checkWin()) {
+                    JOptionPane.showMessageDialog(
+                            gameFrame,
+                            "Congratulation! You GOT it! for " + validAttemptsCount + " tries!",
+                            "WIN!",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                }
+            }
+
             resetInputField();
-    });
+        });
 
     }
 
@@ -121,14 +137,14 @@ public class Visual {
         instructionLabel.setBounds(80, 60, 150, 30);
         gameFrame.add(instructionLabel);
 
-        triesLabel = new JLabel("You tried: 0");
+        triesLabel = new JLabel("Attempts: " + validAttemptsCount);
         triesLabel.setBounds(100, 165, 150, 30);
         gameFrame.add(triesLabel);
     }
 
-    private static void setupGameLogic() {
+    private static GameLogic setupGameLogic() {
         // Game logic is initialized here
-        new GameLogic();
+        return new GameLogic();
     }
 
     private static void showFrame() {
@@ -148,12 +164,12 @@ public class Visual {
      * Creates and shows GUI
      */
     public static void createAndShowGUI() {
+        gameLogic = new GameLogic();
         initializeFrame();
         createLabels();
         createInputField();
         createButton();
         createTextPane();
-        setupGameLogic();
         showFrame();
     }
 
@@ -167,6 +183,18 @@ public class Visual {
 
     private static void updateCounter() {
         triesLabel.setText("Attempts: " + validAttemptsCount);
+    }
+
+    public static void updateRightNumbersLabel() {
+        if (gameLogic != null) {
+            rightNumbersLabel.setText("Right numbers: " + gameLogic.compareCode());
+        }
+    }
+
+    public static void updateRightPlaceLabel() {
+        if (gameLogic != null) {
+            rightPlaceLabel.setText("Numbers in right place: " + gameLogic.checkResult());
+        }
     }
 
     private static void resetInputField() {

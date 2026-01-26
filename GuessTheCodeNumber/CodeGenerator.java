@@ -1,4 +1,4 @@
-package GuessTheCodeNumber.Logic;
+package GuessTheCodeNumber;
 
 import java.util.ArrayList;
 import java.util.Collections;
