@@ -13,12 +13,9 @@ public class GameLogic {
     private int[] secretCode = new int[4];
     private int[] userInput = new int[4];
 
-    // Убрать rightDigits и rightPlaces как поля класса
-
     // create secret code to user, for his guessing
     private void createCode(){
         secretCode = CodeGenerator.generateCodeAsArray();
-        System.out.println("Secret code: " + Arrays.toString(secretCode));
     }
 
     public GameLogic(){
@@ -26,18 +23,18 @@ public class GameLogic {
     }
 
     //get user input code
-    public void getUserInput(String input){ // ИЗМЕНИТЬ: принимать строку
+    public void getUserInput(String input){
         DigitFilter filter = new DigitFilter();
-        userInput = filter.toIntArray(input); // использовать переданную строку
+        userInput = filter.toIntArray(input); // use the passed string
     }
 
     //compare digits of user input with secret code
     public int compareCode(){
-        int rightDigits = 0; // локальная переменная
+        int rightDigits = 0; // local variable
         boolean[] secretUsed = new boolean[4];
         boolean[] inputUsed = new boolean[4];
 
-        // Сначала считаем точные совпадения по позициям
+        // First, we count exact matches by position
         for (int i = 0; i < 4; i++) {
             if (userInput[i] == secretCode[i]) {
                 rightDigits++;
@@ -46,12 +43,12 @@ public class GameLogic {
             }
         }
 
-        // Затем считаем совпадения на других позициях
+        // count the matches in other positions
         for (int i = 0; i < 4; i++) {
-            if (inputUsed[i]) continue; // уже учтено как точное совпадение
+            if (inputUsed[i]) continue; // exact match
 
             for (int j = 0; j < 4; j++) {
-                if (secretUsed[j]) continue; // уже использовано
+                if (secretUsed[j]) continue; // already used
 
                 if (userInput[i] == secretCode[j]) {
                     rightDigits++;
@@ -66,7 +63,7 @@ public class GameLogic {
     //compare user input with secret code and return the result
     //of the right places of guessing digits
     public int checkResult(){
-        int rightPlaces = 0; // локальная переменная
+        int rightPlaces = 0; // local variable
         for (int i = 0; i < 4; i++) {
             if (userInput[i] == secretCode[i]) {
                 rightPlaces++;
@@ -76,11 +73,11 @@ public class GameLogic {
     }
 
     //check if the user won the game
-    public boolean checkWin(){ // сделать публичным
+    public boolean checkWin(){
         return checkResult() == 4;
     }
 
-    // Для отладки - получить секретный код
+        // For debugging - get the secret code
     public int[] getSecretCode() {
         return secretCode.clone();
     }

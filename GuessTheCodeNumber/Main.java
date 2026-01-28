@@ -7,7 +7,7 @@ package GuessTheCodeNumber;
  */
 
 /**
- * Главный класс для запуска игры "Guess the Code Number"
+ * The main class for running the game "Guess the Code Number"
  */
 public class Main {
     public static void main(String[] args) {
@@ -27,7 +27,7 @@ public class Main {
                         javax.swing.JOptionPane.ERROR_MESSAGE
                 );
             }
-            DigitFilter df = new DigitFilter();
+            //DigitFilter df = new DigitFilter();
         });
     }
 }

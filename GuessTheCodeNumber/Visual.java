@@ -91,21 +91,26 @@ public class Visual {
 
             // 4) Everything is OK
             usedInputs.add(input);
-            appendToTextPane(input);
 
             validAttemptsCount++;
             updateCounter();
 
             if (gameLogic != null) {
-                gameLogic.getUserInput(input); // передаем строку ввода
+                gameLogic.getUserInput(input); // passing the input string
+                int rightNumbers = gameLogic.compareCode();
+                int rightPlaces = gameLogic.checkResult();
+
+                // Adding input with results
+                appendToTextPane(input, rightNumbers, rightPlaces);
+
                 updateRightNumbersLabel();
                 updateRightPlaceLabel();
 
-                // Проверка победы
+                // Victory check
                 if (gameLogic.checkWin()) {
                     JOptionPane.showMessageDialog(
                             gameFrame,
-                            "Congratulation! You GOT it! for " + validAttemptsCount + " tries!",
+                            "Congratulation! You GOT it!!! For  " + validAttemptsCount + " tries!",
                             "WIN!",
                             JOptionPane.INFORMATION_MESSAGE
                     );
@@ -174,11 +179,12 @@ public class Visual {
     }
 
     //print user input code on the screen
-    public static void appendToTextPane(String message) {
+    //print user input code on the screen with results
+    public static void appendToTextPane(String message, int rightNumbers, int rightPlaces) {
         if (textPane == null) return;
 
         String oldText = textPane.getText();
-        textPane.setText(oldText + "  " + message + "\n");
+        textPane.setText(oldText + "  " + message + "\t\t -> \t" + rightNumbers + " / " + rightPlaces + "\n");
     }
 
     private static void updateCounter() {
